@@ -1,1 +1,105 @@
 
+# -*- coding:utf-8 -*-
+"""
+==============================================================
+Step 1: Raw Data Integration and Excess Return Calculation
+==============================================================
+"""
+
+import pandas as pd
+import numpy as np
+import os
+
+# 2. File Paths
+base_dir = r"D:\thailand study\26_7_23paper\04_code"
+
+input_stock_file = os.path.join(base_dir, "zongdegupiao.csv")
+input_index_file = os.path.join(base_dir, "dapanzhishu.csv")
+
+output_dir = r"D:\thailand study\26_7_23paper\02_processed_data"
+if not os.path.exists(output_dir):
+    os.makedirs(output_dir)
+    print(f"Created output folder: {output_dir}")
+
+output_merged_file = os.path.join(output_dir, "01_merged_panel.csv")
+output_excess_file = os.path.join(output_dir, "01_excess_return_panel.csv")
+
+# 3. Read Data
+print("=" * 60)
+print("Start: Raw Data Integration and Excess Return Calculation")
+print("=" * 60)
+
+print(f"\n[1/5] Reading stock data: {input_stock_file}")
+df_stock = pd.read_csv(input_stock_file, encoding='utf-8-sig')  
+print(f"      Success! Rows: {len(df_stock):,}, Cols: {len(df_stock.columns)}")
+
+print(f"\n[2/5] Reading index data: {input_index_file}")
+df_index = pd.read_csv(input_index_file, encoding='utf-8-sig')
+print(f"      Success! Rows: {len(df_index):,}, Cols: {len(df_index.columns)}")
+
+# 4. Data Preprocessing
+print("\n[3/5] Preprocessing data...")
+
+df_stock['time'] = pd.to_datetime(df_stock['time'])
+df_index['time'] = pd.to_datetime(df_index['time'])
+
+start_date = '2019-01-01'
+end_date = '2026-07-01'
+df_stock = df_stock[(df_stock['time'] >= start_date) & (df_stock['time'] <= end_date)]
+df_index = df_index[(df_index['time'] >= start_date) & (df_index['time'] <= end_date)]
+
+print(f"      Stock time range: {df_stock['time'].min()} to {df_stock['time'].max()}")
+print(f"      Index time range: {df_index['time'].min()} to {df_index['time'].max()}")
+
+df_hs300 = df_index[df_index['thscode'] == '000300.SH'][['time', 'changeRatio']].copy()
+df_hs300 = df_hs300.rename(columns={'changeRatio': 'Index_Ret'})
+
+if 'changeRatio' in df_stock.columns:
+    df_stock = df_stock.rename(columns={'changeRatio': 'Ret'})
+else:
+    raise KeyError("Column 'changeRatio' not found in stock data.")
+
+# 5. Merge Data
+print("\n[4/5] Merging stock and HS300 index data...")
+df_merged = pd.merge(df_stock, df_hs300, on='time', how='left')
+
+missing_index = df_merged['Index_Ret'].isna().sum()
+if missing_index > 0:
+    print(f"      Warning: {missing_index:,} rows missing index data.")
+    df_merged = df_merged.dropna(subset=['Index_Ret'])
+    print(f"      Dropped missing rows. Current rows: {len(df_merged):,}")
+
+print(f"      Merge complete! Total rows: {len(df_merged):,}")
+
+# 6. Calculate Excess Return
+print("\n[5/5] Calculating Excess Return...")
+df_merged['Excess_Ret'] = df_merged['Ret'] - df_merged['Index_Ret']
+
+# 7. Add Time Identifiers
+df_merged['year'] = df_merged['time'].dt.year
+df_merged['month'] = df_merged['time'].dt.month
+df_merged['quarter'] = df_merged['time'].dt.quarter
+df_merged['year_month'] = df_merged['time'].dt.to_period('M').astype(str)
+df_merged['week_of_year'] = df_merged['time'].dt.isocalendar().week.astype(int)
+
+# 8. Save Results
+df_merged.to_csv(output_merged_file, index=False, encoding='utf-8-sig')
+print(f"\n      Merged panel saved: {output_merged_file}")
+
+df_excess = df_merged[['thscode', 'time', 'year', 'month', 'quarter', 'year_month', 
+                       'close', 'Ret', 'Index_Ret', 'Excess_Ret']].copy()
+df_excess.to_csv(output_excess_file, index=False, encoding='utf-8-sig')
+print(f"      Excess return panel saved: {output_excess_file}")
+
+# 9. Summary
+print("\n" + "=" * 60)
+print("Step 1 Completed! Summary:")
+print("=" * 60)
+print(f"   Stocks: {df_excess['thscode'].nunique():,}")
+print(f"   Time Range: {df_excess['time'].min()} to {df_excess['time'].max()}")
+print(f"   Total Observations: {len(df_excess):,}")
+print(f"   Excess Ret Mean: {df_excess['Excess_Ret'].mean():.4f}%")
+print(f"   Excess Ret Std: {df_excess['Excess_Ret'].std():.4f}%")
+print("=" * 60)
+print("Next step: Run step_02_aggregate_to_monthly.py")
+print("=" * 60)
