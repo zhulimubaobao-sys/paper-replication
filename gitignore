@@ -1,0 +1,18 @@
+# 原始商业数据
+01_raw_data/
+*.csv
+!data/simulated_example.csv
+!data/codebook.csv
+!data/sample_firms.csv
+!data/layer_classification.csv
+
+# 缓存、临时文件
+__pycache__/
+*.pyc
+*.log
+*.tmp
+.env
+
+# 大型PDF、Word初稿
+*.pdf
+*.docx
