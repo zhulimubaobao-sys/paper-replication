@@ -1,0 +1,6 @@
+﻿Model,Description,DID Coeff.,Std. Err.,p-value,Observations,R²,Significance
+Model 1,No Controls,0.0323***,(0.0001),<0.001,5360,0.0023,***
+Model 2,+ Volatility,-0.0964***,(0.0001),<0.001,5299,0.3038,***
+Model 3,+ L1,-0.1294***,(0.0001),<0.001,5240,0.1884,***
+Model 4,+ L1 + L2,-0.1316***,(0.0001),<0.001,5180,0.1952,***
+Model 5,+ Full Controls,-0.0961***,(0.0001),<0.001,5180,0.4410,***
