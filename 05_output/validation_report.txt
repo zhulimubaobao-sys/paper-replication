@@ -1,0 +1,29 @@
+======================================================================
+步骤三核验报告
+核验时间：2026-07-27 10:01:00
+======================================================================
+
+【Table 2 核心结果】
+  全样本 | Post: 0.0176 (p=0.0087)
+  上游 | Post: 0.0463 (p=0.0006)
+  下游 | Post: 0.0075 (p=0.3488)
+  交互项 | Post: -0.0020 (p=0.7415)
+  交互项 | Post_x_Upstream: 0.0560 (p=0.0000)
+
+【H1假设检验】
+  ✅ 通过 H1a: 上游Post系数显著为正
+  ✅ 通过 H1b: 下游Post系数不显著
+  ✅ 通过 H1c: 交互项Post×上游显著为正
+  ✅ 通过 H1d: 上游系数 > 下游系数
+
+【文件完整性】
+  ✅ table1_descriptive.csv
+  ✅ table2_did_main.csv
+  ✅ table3_mechanism.csv
+  ✅ did_regression_full_log.txt
+  ✅ CN/figure1_parallel_trend_CN.png
+  ✅ EN/figure1_parallel_trend_EN.png
+  ✅ CN/figure2_layer_comparison_CN.png
+  ✅ EN/figure2_layer_comparison_EN.png
+
+======================================================================

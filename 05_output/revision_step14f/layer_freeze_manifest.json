@@ -1,0 +1,16 @@
+{
+  "freeze_version": "layer_final_v1_2023_annual_report",
+  "freeze_time": "2026-07-27T15:12:07+07:00",
+  "company_count": 60,
+  "layer_counts": {
+    "中游": 24,
+    "上游": 21,
+    "下游": 15
+  },
+  "changed_from_original_count": 14,
+  "input_path": "D:\\thailand study\\26_7_23paper\\05_output\\revision_step14e\\tables\\table_i1_evidence_based_layer_review.csv",
+  "input_sha256": "b7f356c1cbed7552d8c5194fdcc0f36488a7e50e606579ae539d27d84e1477a6",
+  "frozen_path": "D:\\thailand study\\26_7_23paper\\05_output\\revision_step14f\\tables\\table_j1_final_frozen_layer.csv",
+  "frozen_sha256": "cf247e93990f1fa9487220217116cf843ef704db668bb9ed0f15fc0ba4be6938",
+  "classification_rule": "2023年年度报告事件前证据+AI价值链主要经济功能；禁止根据统计显著性重新分类"
+}
